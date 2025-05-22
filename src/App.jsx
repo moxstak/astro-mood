@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { supabase } from './supabaseClient'; // add this at the top
 
 function App() {
   return (
@@ -30,12 +31,25 @@ function MoodLogger() {
   const [mood, setMood] = useState("");
   const [note, setNote] = useState("");
 
-  const handleSubmit = () => {
-    alert(`Mood: ${mood}\nNote: ${note}`);
-    // Here you would POST to Supabase
+  const handleSubmit = async () => {
+  if (!mood) {
+    alert("Please select a mood.");
+    return;
+  }
+
+  const { error } = await supabase.from('mood_logs').insert([
+    { mood, note }
+  ]);
+
+  if (error) {
+    console.error('Error saving mood:', error);
+    alert("Error saving mood.");
+  } else {
+    alert(`Mood saved: ${mood}`);
     setMood("");
     setNote("");
-  };
+  }
+};
 
   return (
     <div className="p-6">
