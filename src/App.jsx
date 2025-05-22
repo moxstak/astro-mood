@@ -1,9 +1,9 @@
-// AstroMood - MVP Web App (React + Tailwind)
-// This is a starter layout with mood logging, forecasts, and basic routing
+// AstroMood - MVP Web App (React + Tailwind + Supabase)
+// Includes mood logging, forecast, and mood saving to Supabase
 
 import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import { supabase } from './supabaseClient'; // add this at the top
+import { supabase } from './supabaseClient';
 
 function App() {
   return (
@@ -32,24 +32,24 @@ function MoodLogger() {
   const [note, setNote] = useState("");
 
   const handleSubmit = async () => {
-  if (!mood) {
-    alert("Please select a mood.");
-    return;
-  }
+    if (!mood) {
+      alert("Please select a mood.");
+      return;
+    }
 
-  const { error } = await supabase.from('mood_logs').insert([
-    { mood, note }
-  ]);
+    const { error } = await supabase.from('mood_logs').insert([
+      { mood, note }
+    ]);
 
-  if (error) {
-    console.error('Error saving mood:', error);
-    alert("Error saving mood.");
-  } else {
-    alert(`Mood saved: ${mood}`);
-    setMood("");
-    setNote("");
-  }
-};
+    if (error) {
+      console.error('Error saving mood:', error);
+      alert("Error saving mood.");
+    } else {
+      alert(`Mood saved: ${mood}`);
+      setMood("");
+      setNote("");
+    }
+  };
 
   return (
     <div className="p-6">
